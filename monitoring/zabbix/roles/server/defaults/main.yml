@@ -1,0 +1,16 @@
+---
+# defaults file for zabbix
+required_docker_packages:
+  - docker-ce
+  - docker-ce-cli
+  - docker-compose
+
+bash_aliases_path: "~/.bash_aliases"
+
+required_dependencies:
+  - apt-transport-https
+  - ca-certificates
+  - curl
+  - gnupg-agent
+  - software-properties-common
+  - python3-pip

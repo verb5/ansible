@@ -1,0 +1,18 @@
+---
+# tasks file for zabbix
+- name: Create ansible user
+  ansible.builtin.user:
+    name: ansible
+    comment: used for Ansible
+    shell: /bin/bash
+    state: present
+
+- name: Enable passwordless sudo for ansible user
+  ansible.builtin.lineinfile:
+    path: /etc/sudoers
+    insertafter: '^# User privilege specification'
+    line: 'ansible ALL = (ALL) NOPASSWD: ALL'
+
+
+- name: Include docker tasks
+  ansible.builtin.include_tasks: docker.yml

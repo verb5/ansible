@@ -1,0 +1,42 @@
+- name: Create dir for gpg keyrings
+  ansible.builtin.file:
+    path: /etc/apt/keyrings
+    state: directory
+    recurse: true
+
+- name: Add docker gpg key
+  ansible.builtin.apt_key:
+    url: https://download.docker.com/linux/debian/gpg
+    state: present
+
+- name: Add docker apt repo
+  ansible.builtin.apt_repository:
+    repo:  "deb https://download.docker.com/linux/debian {{ ansible_distribution_release }} stable"
+    state: present
+
+- name: Install Docker | Debian All
+  ansible.builtin.apt:
+    name: "{{ required_docker_packages }}"
+    update_cache: true
+    state: present
+
+- name: Create docker dir
+  ansible.builtin.file:
+    path: ~/docker
+    state: directory
+
+- name: Copy docker dir
+  ansible.builtin.template:
+    src: docker-compose.j2
+    dest: ~/docker/docker-compose.yaml
+
+- name: Install docker module for python3
+  ansible.builtin.pip:
+    name:
+      - docker==6.0.1
+      - docker-compose==1.29.2
+
+- name: Run docker-compose up
+  community.docker.docker_compose:
+    project_src: ~/docker
+    build: false
